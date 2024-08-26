@@ -1,0 +1,26 @@
+name: Slack Notification Testing
+on: push
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress Automation
+        uses: cypress-io/github-action@v6
+        with: 
+            command: npx cypress run
+
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+            SLACK_COLOR: ${{ job.status }} 
+            SLACK_ICON: https://github.com/rtCamp.png?size=48
+            SLACK_MESSAGE: 'Cypress Automation Run Results ${{github.run_id}}'
+            SLACK_TITLE: Automation Run Results
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+
+       
